@@ -1,15 +1,15 @@
 package com.example.IoT.account.controller;
 
-import com.example.IoT.account.service.AuthService;
+import com.example.IoT.account.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-    private final AuthService authService;
+    private final AccountService accountService;
 
-    public AccountController(AuthService authService) {
-        this.authService = authService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
 //    @PostMapping("/signup")
