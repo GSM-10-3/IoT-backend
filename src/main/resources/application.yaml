@@ -1,18 +1,31 @@
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/IoT?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/iot?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: Al089218@@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-jpa:
-  hibernate:
-    ddl-auto: update
-  show-sql: true
-  properties:
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${EMAIL}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          timeout: 5000
+
+  jpa:
     hibernate:
-      format_sql: true
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 # DataGSM OAuth ??
 datagsm:
