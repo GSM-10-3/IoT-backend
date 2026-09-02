@@ -10,6 +10,9 @@ import com.example.IoT.auth.service.UserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +56,10 @@ public class TeacherAuthController {
 
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest loginRequest){
-
+        Authentication authentication = authService.login(loginRequest.email(), loginRequest.password());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        return "로그인 성공";
     }
 }

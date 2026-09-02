@@ -6,18 +6,14 @@ import com.example.IoT.auth.domain.UserEntity;
 import com.example.IoT.auth.domain.UserRole;
 import com.example.IoT.auth.repository.AuthRepository;
 import com.example.IoT.auth.repository.EmailRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +22,7 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final EmailRepository emailRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private static final String ALLOWED_DOMAIN = "@gsm.hs.kr";
 
 
@@ -63,17 +60,12 @@ public class AuthService {
         }
     }
 
-    public void login(String email, String username, String password) {
-        UserEntity user = authRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.")
-                );
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException(
-                    "이메일 또는 비밀번호가 올바르지 않습니다."
-            );
-        }
-
+    public Authentication login(String email, String password) {
+       return authenticationManager.authenticate(
+               new UsernamePasswordAuthenticationToken(
+                    email,
+                    password
+            )
+       );
     }
 }
