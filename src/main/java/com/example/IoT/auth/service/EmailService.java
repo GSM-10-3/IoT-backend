@@ -78,6 +78,16 @@ public class EmailService {
         // 로그인 가능하게 변경
         emailVerification1.verify();
     }
+    private static final String ALLOWED_DOMAIN = "@gsm.hs.kr";
+
+    public void validateEmailDomain(String email) {
+        if (email == null || !email.toLowerCase().endsWith(ALLOWED_DOMAIN)) {
+            throw new IllegalArgumentException(
+                    "허용되지 않은 이메일 도메인입니다."
+            );
+        }
+    }
+
 //    private void validateSchoolEmail(String email) {
 //        String domain = appProperties.getSchoolEmailDomain().toLowerCase();
 //        if (domain.isBlank()) {

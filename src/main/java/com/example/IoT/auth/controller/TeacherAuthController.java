@@ -25,7 +25,7 @@ public class TeacherAuthController {
 
     @PostMapping("/email-send")
     public String email_send(@Valid @RequestBody EmailSendRequest emailSendRequest){
-
+        authService.validateEmailDomain(emailSendRequest.email());
         emailService.sendVerificationCode(emailSendRequest.email());
 
         return "인증번호가 전송되었습니다.";
@@ -43,6 +43,7 @@ public class TeacherAuthController {
     @PostMapping("/signup")
     public String signup(@RequestBody SignupRequest signupRequest){
 
+        emailService.validateEmailDomain(signupRequest.email());
         authService.signup(signupRequest.username(),
                 signupRequest.email(),
                 signupRequest.password());
