@@ -1,16 +1,13 @@
 package com.example.IoT.auth.service;
 
 import com.example.IoT.auth.domain.EmailVerification;
-import com.example.IoT.auth.domain.UserEntity;
 import com.example.IoT.auth.repository.AuthRepository;
 import com.example.IoT.auth.repository.EmailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -87,7 +84,6 @@ public class EmailService {
             );
         }
     }
-
 //    private void validateSchoolEmail(String email) {
 //        String domain = appProperties.getSchoolEmailDomain().toLowerCase();
 //        if (domain.isBlank()) {

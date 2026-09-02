@@ -2,6 +2,7 @@ package com.example.IoT.auth.controller;
 
 
 import com.example.IoT.auth.DTO.EmailSendRequest;
+import com.example.IoT.auth.DTO.LoginRequest;
 import com.example.IoT.auth.DTO.SignupRequest;
 import com.example.IoT.auth.service.AuthService;
 import com.example.IoT.auth.service.EmailService;
@@ -39,7 +40,6 @@ public class TeacherAuthController {
         return "인증되었습니다.";
     }
 
-
     @PostMapping("/signup")
     public String signup(@RequestBody SignupRequest signupRequest){
 
@@ -49,5 +49,10 @@ public class TeacherAuthController {
                 signupRequest.password());
         System.out.println("========== SIGNUP CONTROLLER ==========");
         return "회원가입 성공!";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest){
+
     }
 }
