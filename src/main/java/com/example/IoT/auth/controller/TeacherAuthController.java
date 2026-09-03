@@ -7,16 +7,21 @@ import com.example.IoT.auth.DTO.SignupRequest;
 import com.example.IoT.auth.service.AuthService;
 import com.example.IoT.auth.service.EmailService;
 import com.example.IoT.auth.service.UserDetailsService;
+import com.example.IoT.global.DTO.ApiResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -26,40 +31,74 @@ public class TeacherAuthController {
     private final AuthService authService;
     private final UserDetailsService UserDetailsService;
     private final EmailService emailService;
+    private final SecurityContextRepository securityContextRepository;
 
     @PostMapping("/email-send")
-    public String email_send(@Valid @RequestBody EmailSendRequest emailSendRequest){
+    public ResponseEntity<?> email_send(@Valid @RequestBody EmailSendRequest emailSendRequest){
         authService.validateEmailDomain(emailSendRequest.email());
         emailService.sendVerificationCode(emailSendRequest.email());
 
-        return "인증번호가 전송되었습니다.";
+        return ResponseEntity.ok(new ApiResponseDTO(200,
+                "인증번호가 발송되었습니다."));
 
     }
 
     @PostMapping("/verify")
-    public String verify(@RequestBody EmailSendRequest request){
+    public ResponseEntity<?> verify(@RequestBody EmailSendRequest request){
         emailService.verifyCode(request.email(),
                 request.code());
-        return "인증되었습니다.";
+        return ResponseEntity.ok(new ApiResponseDTO(200,
+                "인증되었습니다."));
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest){
 
-        emailService.validateEmailDomain(signupRequest.email());
-        authService.signup(signupRequest.username(),
+        authService.signup(
+                signupRequest.username(),
                 signupRequest.email(),
                 signupRequest.password());
-        System.out.println("========== SIGNUP CONTROLLER ==========");
-        return "회원가입 성공!";
+        return ResponseEntity.ok(new ApiResponseDTO(200,
+                "회원가입이 성공적으로 완료되었습니다."));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest){
-        Authentication authentication = authService.login(loginRequest.email(), loginRequest.password());
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
+                                   HttpServletRequest httpRequest,
+                                   HttpServletResponse httpResponse) {
+
+        Authentication authentication =
+                authService.login(loginRequest.email(),
+                loginRequest.password());
+
+        SecurityContext context =
+                SecurityContextHolder.createEmptyContext();
+
         context.setAuthentication(authentication);
+
         SecurityContextHolder.setContext(context);
-        return "로그인 성공";
+
+        securityContextRepository.saveContext(
+                context,
+                httpRequest,
+                httpResponse
+        );
+        return ResponseEntity.ok(new ApiResponseDTO(
+                200,
+                "로그인이 성공적으로 완료되었습니다."));
+    }
+    @GetMapping("/me")
+    public ResponseEntity<?> me(Authentication authentication) {
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "email", authentication.getName(),
+                        "role", authentication.getAuthorities()
+                                .stream()
+                                .findFirst()
+                                .map(GrantedAuthority::getAuthority)
+                                .orElse("")
+                )
+        );
     }
 }

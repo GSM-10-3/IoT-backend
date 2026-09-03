@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -25,14 +26,18 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private static final String ALLOWED_DOMAIN = "@gsm.hs.kr";
 
-
+    @Transactional
     public void signup(String username, String email, String password) {
+        validateEmailDomain(email);
         EmailVerification verification =
                 emailRepository.findTopByEmailOrderByCreatedAtDesc(email)
                         .orElseThrow(() ->
                                 new IllegalArgumentException("이메일 인증을 먼저 해주세요.")
                         );
 
+        if (verification.isUsed()){
+            throw new IllegalArgumentException("이미 사용된 이메일입니다.");
+        }
         if (!verification.isVerified()) {
             throw new IllegalArgumentException("이메일 인증을 먼저 해주세요.");
         }
@@ -42,6 +47,9 @@ public class AuthService {
         if (authRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 등록된 이메일입니다.");
         }
+        if (password.length()<8){
+            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+        }
 //
         UserRole role = UserRole.USER;
         if ("admin".equals(username)) {  // 아이디가 admin인 경우 ADMIN 권한 부여
@@ -49,8 +57,14 @@ public class AuthService {
         }
 
         String encodedPassword = passwordEncoder.encode(password);
-        UserEntity userEntity = new UserEntity(username, email, encodedPassword, role);
-        authRepository.save(userEntity);
+        UserEntity user = new UserEntity(
+                username,
+                email,
+                encodedPassword,
+                role);
+
+        verification.setUsed(true);
+        authRepository.save(user);
     }
     public void validateEmailDomain(String email) {
         if (email == null || !email.toLowerCase().endsWith(ALLOWED_DOMAIN)) {

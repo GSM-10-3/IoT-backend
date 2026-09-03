@@ -16,8 +16,8 @@ public class UserDetailsService implements org.springframework.security.core.use
     private final AuthRepository authRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = authRepository.findByEmail(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = authRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
         return User.builder()
                 .username(userEntity.getUsername())

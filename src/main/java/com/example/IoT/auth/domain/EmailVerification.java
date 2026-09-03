@@ -2,6 +2,7 @@ package com.example.IoT.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -25,6 +26,10 @@ public class EmailVerification {
     private boolean verified;
 
     @Getter
+    @Setter
+    private boolean used;
+
+    @Getter
     @Column(nullable = false)
     private Instant expiresAt;
 
@@ -33,6 +38,10 @@ public class EmailVerification {
     private Instant createdAt;
 
     protected EmailVerification() {
+    }
+
+    public boolean isUsed(){
+        return used;
     }
 
     public EmailVerification(String email,
