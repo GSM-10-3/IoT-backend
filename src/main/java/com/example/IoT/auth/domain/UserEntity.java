@@ -25,9 +25,6 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Getter
-    private boolean enabled;
-
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
@@ -36,9 +33,5 @@ public class UserEntity {
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public void enabled(){
-        this.enabled = true;
     }
 }

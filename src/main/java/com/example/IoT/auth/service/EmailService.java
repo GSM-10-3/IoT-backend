@@ -65,15 +65,7 @@ public class EmailService {
 
         // 이메일 인증 완료
         emailVerification.verify();
-
-        // 해당 회원 찾기
-        EmailVerification emailVerification1= emailRepository.findTopByEmailOrderByCreatedAtDesc(email)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("해당 이메일의 회원이 존재하지 않습니다.")
-                );
-
-        // 로그인 가능하게 변경
-        emailVerification1.verify();
+        emailRepository.save(emailVerification);
     }
     private static final String ALLOWED_DOMAIN = "@gsm.hs.kr";
 

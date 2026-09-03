@@ -23,7 +23,6 @@ public class UserDetailsService implements org.springframework.security.core.use
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .roles(userEntity.getRole().name())
-                .disabled(!userEntity.isEnabled())
                 .build();
     }
 }

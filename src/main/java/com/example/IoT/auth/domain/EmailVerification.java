@@ -23,11 +23,11 @@ public class EmailVerification {
 
     @Getter
     @Column(nullable = false)
-    private boolean verified;
+    private boolean verified = false;
 
     @Getter
     @Setter
-    private boolean used;
+    private boolean used = false;
 
     @Getter
     @Column(nullable = false)
@@ -38,10 +38,6 @@ public class EmailVerification {
     private Instant createdAt;
 
     protected EmailVerification() {
-    }
-
-    public boolean isUsed(){
-        return used;
     }
 
     public EmailVerification(String email,
@@ -57,4 +53,8 @@ public class EmailVerification {
     public void verify() {
         this.verified = true;
     }
+    public void used(){
+        this.used = true;
+    }
+
 }

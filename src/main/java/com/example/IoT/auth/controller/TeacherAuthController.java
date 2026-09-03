@@ -35,31 +35,47 @@ public class TeacherAuthController {
 
     @PostMapping("/email-send")
     public ResponseEntity<?> email_send(@Valid @RequestBody EmailSendRequest emailSendRequest){
-        authService.validateEmailDomain(emailSendRequest.email());
-        emailService.sendVerificationCode(emailSendRequest.email());
+        try {
+            authService.validateEmailDomain(emailSendRequest.email());
+            emailService.sendVerificationCode(emailSendRequest.email());
 
-        return ResponseEntity.ok(new ApiResponseDTO(200,
-                "인증번호가 발송되었습니다."));
-
+            return ResponseEntity.ok(new ApiResponseDTO(200,
+                    "인증번호가 발송되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponseDTO(400, e.getMessage())
+            );
+        }
     }
 
     @PostMapping("/verify")
     public ResponseEntity<?> verify(@RequestBody EmailSendRequest request){
-        emailService.verifyCode(request.email(),
-                request.code());
-        return ResponseEntity.ok(new ApiResponseDTO(200,
-                "인증되었습니다."));
+        try {
+            emailService.verifyCode(request.email(),
+                    request.code());
+            return ResponseEntity.ok(new ApiResponseDTO(200,
+                    "인증되었습니다."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponseDTO(400, e.getMessage())
+            );
+        }
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest){
-
+        try{
         authService.signup(
                 signupRequest.username(),
                 signupRequest.email(),
                 signupRequest.password());
         return ResponseEntity.ok(new ApiResponseDTO(200,
                 "회원가입이 성공적으로 완료되었습니다."));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(
+                    new ApiResponseDTO(400, e.getMessage())
+            );
+        }
     }
 
     @PostMapping("/login")
@@ -67,7 +83,7 @@ public class TeacherAuthController {
                                    HttpServletRequest httpRequest,
                                    HttpServletResponse httpResponse) {
 
-        Authentication authentication =
+        try{Authentication authentication =
                 authService.login(loginRequest.email(),
                 loginRequest.password());
 
@@ -86,6 +102,11 @@ public class TeacherAuthController {
         return ResponseEntity.ok(new ApiResponseDTO(
                 200,
                 "로그인이 성공적으로 완료되었습니다."));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(
+                    new ApiResponseDTO(400, e.getMessage())
+            );
+        }
     }
     @GetMapping("/me")
     public ResponseEntity<?> me(Authentication authentication) {

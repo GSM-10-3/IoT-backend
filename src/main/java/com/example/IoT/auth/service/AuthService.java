@@ -62,8 +62,7 @@ public class AuthService {
                 email,
                 encodedPassword,
                 role);
-
-        verification.setUsed(true);
+        verification.used();
         authRepository.save(user);
     }
     public void validateEmailDomain(String email) {
