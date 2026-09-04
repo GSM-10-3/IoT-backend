@@ -46,12 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/email-send").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/login")
-                        .successHandler(((request, response, authentication) ->
-                        {response.setStatus(HttpServletResponse.SC_OK);}))
-                        );
+                );
         return http.build();
     }
     @Bean
