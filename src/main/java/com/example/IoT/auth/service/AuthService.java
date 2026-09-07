@@ -50,19 +50,15 @@ public class AuthService {
         if (password.length()<8){
             throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
         }
-//
-        UserRole role = UserRole.USER;
-        if ("admin".equals(username)) {  // 아이디가 admin인 경우 ADMIN 권한 부여
-            role = UserRole.ADMIN;
-        }
 
         String encodedPassword = passwordEncoder.encode(password);
         UserEntity user = new UserEntity(
                 username,
                 email,
                 encodedPassword,
-                role);
+                UserRole.USER);
         verification.used();
+        emailRepository.save(verification);
         authRepository.save(user);
     }
     public void validateEmailDomain(String email) {
