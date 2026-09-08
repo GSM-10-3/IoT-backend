@@ -1,0 +1,90 @@
+### 0-1. 문 추가 (admin)
+POST http://localhost:8080/api/admin/door/add
+Content-Type: application/json
+
+{
+  "name": "3층 실습실",
+  "location": "본관 3층"
+}
+
+### 0-2. 문 추가 (teacher)
+POST http://localhost:8080/api/door/add
+Content-Type: application/json
+
+{
+  "name": "2층 세미나실",
+  "location": "본관 2층"
+}
+
+### 0-3. 모든 문 조회 (admin)
+GET http://localhost:8080/api/admin/door
+
+### 0-4. 문 조회 (teacher) - 사용 가능한 문만
+GET http://localhost:8080/api/door
+
+### 1. 예약 등록
+POST http://localhost:8080/api/reservation/add
+Content-Type: application/json
+
+{
+  "memberId": "user1",
+  "roomId": 1,
+  "startTime": "2026-09-05T14:00:00",
+  "endTime": "2026-09-05T16:00:00"
+}
+
+### 2. 내역 조회
+GET http://localhost:8080/api/reservation?memberId=user1
+
+### 3. 중복 예약
+POST http://localhost:8080/api/reservation/add
+Content-Type: application/json
+
+{
+  "memberId": "user2",
+  "roomId": 1,
+  "startTime": "2026-09-05T15:00:00",
+  "endTime": "2026-09-05T17:00:00"
+}
+
+### 3-1. 없는 문으로 예약
+POST http://localhost:8080/api/reservation/add
+Content-Type: application/json
+
+{
+  "memberId": "user1",
+  "roomId": 99999,
+  "startTime": "2026-09-05T18:00:00",
+  "endTime": "2026-09-05T19:00:00"
+}
+
+### 4. 예약 변경
+PATCH http://localhost:8080/api/reservation/change
+Content-Type: application/json
+
+{
+  "reservationId": 1,
+  "startTime": "2026-09-05T15:00:00",
+  "endTime": "2026-09-05T17:00:00"
+}
+
+### 5. 타임 테이블
+GET http://localhost:8080/api/timetable?roomId=1&date=2026-09-05
+
+### 6. 예약 취소
+DELETE http://localhost:8080/api/reservation/cancle?reservationId=1
+
+### 7. 관리자 - 대기 목록
+GET http://localhost:8080/api/admin/reservation
+
+### 8. 관리자 - 승인
+POST http://localhost:8080/api/admin/reservation-approve
+Content-Type: application/json
+
+{ "reservationId": 1 }
+
+### 9. 관리자 - 거절
+POST http://localhost:8080/api/admin/reservation-refusal
+Content-Type: application/json
+
+{ "reservationId": 1 }
