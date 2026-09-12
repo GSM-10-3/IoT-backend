@@ -20,6 +20,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ReservationService {
 
+    /** 해당 시간대를 실제로 점유하는 상태. 취소·거절된 예약은 자리를 비운다. */
+    private static final List<ReservationStatus> OCCUPYING_STATUSES =
+            List.of(ReservationStatus.PENDING, ReservationStatus.APPROVED);
+
     private final ReservationRepository reservationRepository;
     private final DoorRepository doorRepository;
 
@@ -67,8 +71,8 @@ public class ReservationService {
         LocalDateTime dayEnd = dayStart.plusDays(1);
 
         return reservationRepository
-                .findByRoomIdAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThanOrderByStartTimeAsc(
-                        roomId, ReservationStatus.CANCELED, dayEnd, dayStart)
+                .findByRoomIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThanOrderByStartTimeAsc(
+                        roomId, OCCUPYING_STATUSES, dayEnd, dayStart)
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -125,8 +129,8 @@ public class ReservationService {
 
     private void validateOverlap(Long roomId, LocalDateTime start, LocalDateTime end) {
         boolean overlapped = reservationRepository
-                .existsByRoomIdAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
-                        roomId, ReservationStatus.CANCELED, end, start);
+                .existsByRoomIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+                        roomId, OCCUPYING_STATUSES, end, start);
         if (overlapped) {
             throw new IllegalStateException("이미 예약된 시간입니다.");
         }
@@ -134,8 +138,8 @@ public class ReservationService {
 
     private void validateOverlap(Long roomId, Long excludeId, LocalDateTime start, LocalDateTime end) {
         boolean overlapped = reservationRepository
-                .existsByRoomIdAndIdNotAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
-                        roomId, excludeId, ReservationStatus.CANCELED, end, start);
+                .existsByRoomIdAndIdNotAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+                        roomId, excludeId, OCCUPYING_STATUSES, end, start);
         if (overlapped) {
             throw new IllegalStateException("이미 예약된 시간입니다.");
         }

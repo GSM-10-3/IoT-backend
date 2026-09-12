@@ -5,6 +5,7 @@ import com.example.IoT.reservation.domain.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -13,15 +14,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByStatus(ReservationStatus status);
 
-    List<Reservation> findByRoomIdAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThanOrderByStartTimeAsc(
-            Long roomId, ReservationStatus excludeStatus,
+    List<Reservation> findByRoomIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThanOrderByStartTimeAsc(
+            Long roomId, Collection<ReservationStatus> statuses,
             LocalDateTime endTime, LocalDateTime startTime);
 
-    boolean existsByRoomIdAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
-            Long roomId, ReservationStatus excludeStatus,
+    boolean existsByRoomIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+            Long roomId, Collection<ReservationStatus> statuses,
             LocalDateTime endTime, LocalDateTime startTime);
 
-    boolean existsByRoomIdAndIdNotAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
-            Long roomId, Long excludeId, ReservationStatus excludeStatus,
+    boolean existsByRoomIdAndIdNotAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+            Long roomId, Long excludeId, Collection<ReservationStatus> statuses,
             LocalDateTime endTime, LocalDateTime startTime);
 }

@@ -88,3 +88,14 @@ POST http://localhost:8080/api/admin/reservation-refusal
 Content-Type: application/json
 
 { "reservationId": 1 }
+
+### 10. 거절된 시간대 재예약 - 성공해야 함
+POST http://localhost:8080/api/reservation/add
+Content-Type: application/json
+
+{
+  "memberId": "user3",
+  "roomId": 1,
+  "startTime": "2026-09-05T15:00:00",
+  "endTime": "2026-09-05T17:00:00"
+}
