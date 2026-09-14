@@ -18,14 +18,13 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class EmailService {
     private final EmailRepository emailRepository;
-    private final AuthRepository authRepository;
     private final JavaMailSender mailSender;
 
     private final SecureRandom random = new SecureRandom();
 
     public void sendVerificationCode(String email){
         String code = String.format("%06d", random.nextInt(1_000_000));
-
+        validateEmailDomain(email);
         EmailVerification verification = new EmailVerification(email.trim(),
                 code,
                 Instant.now().plus(5, ChronoUnit.MINUTES),

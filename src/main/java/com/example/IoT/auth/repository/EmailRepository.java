@@ -7,6 +7,4 @@ import java.util.Optional;
 
 public interface EmailRepository extends JpaRepository<EmailVerification, Long> {
     Optional<EmailVerification> findTopByEmailOrderByCreatedAtDesc(String email);
-
-    Optional<EmailVerification> findByEmail(String email);
 }

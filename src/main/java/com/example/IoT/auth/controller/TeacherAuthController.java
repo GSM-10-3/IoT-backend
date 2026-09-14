@@ -29,7 +29,6 @@ import java.util.Map;
 @RequestMapping("/api")
 public class TeacherAuthController {
     private final AuthService authService;
-    private final UserDetailsService UserDetailsService;
     private final EmailService emailService;
     private final SecurityContextRepository securityContextRepository;
 
@@ -83,7 +82,8 @@ public class TeacherAuthController {
                                    HttpServletRequest httpRequest,
                                    HttpServletResponse httpResponse) {
 
-        try{Authentication authentication =
+        try{
+            Authentication authentication =
                 authService.login(loginRequest.email(),
                 loginRequest.password());
 
