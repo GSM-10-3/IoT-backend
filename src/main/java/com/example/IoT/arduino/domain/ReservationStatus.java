@@ -1,4 +1,4 @@
-package com.example.IoT.aduino.domain;
+package com.example.IoT.arduino.domain;
 
 public enum ReservationStatus {
     RESERVED,

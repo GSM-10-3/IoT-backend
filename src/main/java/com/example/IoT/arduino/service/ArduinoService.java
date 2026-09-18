@@ -1,6 +1,6 @@
-package com.example.IoT.aduino.service;
+package com.example.IoT.arduino.service;
 
-import com.example.IoT.aduino.repository.AduinoRepository;
+import com.example.IoT.arduino.repository.ArduinoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AduinoService {
-    private final AduinoRepository aduinoRepository;
+public class ArduinoService {
+    private final ArduinoRepository arduinoRepository;
 
     public void open(){
 

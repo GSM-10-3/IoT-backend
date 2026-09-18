@@ -1,4 +1,4 @@
-package com.example.IoT.aduino.domain;
+package com.example.IoT.arduino.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-public class Aduino {
+public class Arduino {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class Aduino {
     @Column(name = "status")
     private ReservationStatus status;
 
-    public Aduino(LocalDateTime openAt) {
+    public Arduino(LocalDateTime openAt) {
         this.openAt = openAt;
         this.status = ReservationStatus.RESERVED;
     }

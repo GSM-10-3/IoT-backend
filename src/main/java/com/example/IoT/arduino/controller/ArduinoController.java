@@ -1,20 +1,20 @@
-package com.example.IoT.aduino.controller;
+package com.example.IoT.arduino.controller;
 
-import com.example.IoT.aduino.DTO.Command;
-import com.example.IoT.aduino.DTO.CommandResponse;
-import com.example.IoT.aduino.DTO.ResultResponse;
-import com.example.IoT.aduino.service.AduinoService;
+import com.example.IoT.arduino.DTO.Command;
+import com.example.IoT.arduino.DTO.CommandResponse;
+import com.example.IoT.arduino.DTO.ResultResponse;
+import com.example.IoT.arduino.service.ArduinoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/api/door")
-public class AduinoController {
-    private final AduinoService aduinoService;
+public class ArduinoController {
+    private final ArduinoService arduinoService;
 
-    public AduinoController(AduinoService aduinoService) {
-        this.aduinoService = aduinoService;
+    public ArduinoController(ArduinoService arduinoService) {
+        this.arduinoService = arduinoService;
     }
 
     @PostMapping("/{id}/command")

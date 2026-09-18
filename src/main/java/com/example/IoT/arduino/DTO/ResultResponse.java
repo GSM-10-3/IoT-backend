@@ -1,4 +1,4 @@
-package com.example.IoT.aduino.DTO;
+package com.example.IoT.arduino.DTO;
 
 public record ResultResponse(
         int status,
