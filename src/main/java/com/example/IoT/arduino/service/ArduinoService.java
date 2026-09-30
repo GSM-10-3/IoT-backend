@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -17,6 +20,10 @@ public class ArduinoService {
 
     public void result(){
 
+    }
+
+    public void checkReservation(){
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     }
 
 }

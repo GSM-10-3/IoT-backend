@@ -21,14 +21,14 @@ public class Arduino {
     @Getter
     @Setter
     @Column(name = "status")
-    private ReservationStatus status;
+    private Boolean status;
 
     public Arduino(LocalDateTime openAt) {
         this.openAt = openAt;
-        this.status = ReservationStatus.RESERVED;
+        this.status = false;
     }
 
     public void complete() {
-        this.status = ReservationStatus.COMPLETED;
+        this.status = true;
     }
 }
